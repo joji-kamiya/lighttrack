@@ -69,12 +69,17 @@ def load_model_and_Tensor(opt):
     return Tensor, model
 
 
-def inference_yolov3(img_path, Tensor, model):
+def inference_yolov3_(img_path, Tensor, model):
     img = np.array(Image.open(img_path))
-    return inference_yolov3_from_img(img, Tensor, model)
+    return inference_yolov3_from_img_(img, Tensor, model)
 
 
-def inference_yolov3_from_img(img, Tensor, model):
+def inference_yolov3(img_path):
+    img = np.array(Image.open(img_path))
+    return inference_yolov3_from_img(img)
+
+
+def inference_yolov3_from_img_(img, Tensor, model):
     input_img = preprocess_img_for_yolo(img)
 
     # Configure input
@@ -153,5 +158,5 @@ if __name__ == "__main__":
     print("Detector YOLOv3 options:", opt)
     img_path = "/export/guanghan/PyTorch-YOLOv3/data/samples/messi.jpg"
     Tensor, model = load_model_and_Tensor(opt)
-    human_candidates = inference_yolov3(img_path, Tensor, model)
+    human_candidates = inference_yolov3_(img_path, Tensor, model)
     print("human_candidates:", human_candidates)
