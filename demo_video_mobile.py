@@ -74,7 +74,8 @@ def initialize_parameters():
 
 def light_track(pose_estimator,
                 image_folder, output_json_path,
-                visualize_folder, output_video_path):
+                visualize_folder, output_video_path,
+                fps):
 
     global total_time_POSE, total_time_DET, total_time_ALL, total_num_FRAMES, total_num_PERSONS
     ''' 1. statistics: get total time for lighttrack processing'''
@@ -353,8 +354,10 @@ def light_track(pose_estimator,
 
         img_paths = get_immediate_childfile_paths(visualize_folder)
         avg_fps = total_num_FRAMES / total_time_ALL
-        #make_video_from_images(img_paths, output_video_path, fps=avg_fps, size=None, is_color=True, format="XVID")
-        make_video_from_images(img_paths, output_video_path, fps=25, size=None, is_color=True, format="XVID")
+        if fps == 0:
+            make_video_from_images(img_paths, output_video_path, fps=avg_fps, size=None, is_color=True, format="XVID")
+        else:        
+            make_video_from_images(img_paths, output_video_path, fps=fps, size=None, is_color=True, format="XVID")
 
 
 def get_track_id_SGCN(bbox_cur_frame, bbox_list_prev_frame, keypoints_cur_frame, keypoints_list_prev_frame):
@@ -777,6 +780,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--video_path', '-v', type=str, dest='video_path', default="data/demo/video.mp4")
     parser.add_argument('--model', '-m', type=str, dest='test_model', default="weights/mobile-deconv/snapshot_296.ckpt")
+    parser.add_argument('--fps', '-f', type=int, dest='fps', default=0)
     args = parser.parse_args()
     args.bbox_thresh = 0.4
 
@@ -786,6 +790,7 @@ if __name__ == '__main__':
     pose_estimator.load_weights(args.test_model)
 
     video_path = args.video_path
+    fps = args.fps
     visualize_folder = "data/demo/visualize"
     output_video_folder = "data/demo/videos"
     output_json_folder = "data/demo/jsons"
@@ -805,7 +810,8 @@ if __name__ == '__main__':
 
         light_track(pose_estimator,
                     image_folder, output_json_path,
-                    visualize_folder, output_video_path)
+                    visualize_folder, output_video_path,
+                    fps)
 
         print("Finished video {}".format(output_video_path))
 
