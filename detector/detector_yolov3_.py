@@ -47,8 +47,8 @@ from torch.autograd import Variable
 
 # Tensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
 
-Tensor = None
-model = None
+# Tensor = None
+# model = None
 imgs = []  # Stores image paths
 img_detections = []  # Stores detections for each image index
 
@@ -159,6 +159,8 @@ if __name__ == "__main__":
     opt = parser.parse_args()
     print("Detector YOLOv3 options:", opt)
     img_path = "/export/guanghan/PyTorch-YOLOv3/data/samples/messi.jpg"
+    global Tensor
+    global model
     Tensor, model = load_model_and_Tensor(opt)
     human_candidates = inference_yolov3(img_path)
     print("human_candidates:", human_candidates)
